@@ -14,7 +14,7 @@ const Orders = ({token}) => {
     try {
       const response = await axios.post(backend_url + '/api/order/list',{}, {headers:{token}})
       if(response.data.success){
-        setOrders(response.data.orders)
+        setOrders(response.data.orders.reverse())
       } else{
         toast.error(response.data.message)
       }
@@ -71,13 +71,13 @@ const Orders = ({token}) => {
               <p>{order.address.phone}</p>
             </div>
             <div>
-              <p className='text-sm'>Items: {order.items.length}</p>
+              <p className='text-sm text-secondary'>Items: {order.items.length}</p>
               <p className='mt-3'>Method: {order.paymentMethod}</p>
-              <p>Payment: {order.payment ? "Done" : "Pending"}</p>
+              <p className={`text-sm font-semibold ${order.payment ? 'text-green-600' : 'text-red-500'}`}>Payment: {order.payment ? "Done" : "Pending"}</p>
               <p>Date: {new Date(order.date).toLocaleDateString()}</p>
             </div>
-            <p className='text-sm font-semibold'>{currency}{order.amount}</p>
-            <select value={order.status} className='medium-14 p-1 ring-1 ring-slate-900/5 rounded max-w-36 bg-primary'>
+            <p className='text-sm font-semibold text-secondary'>{currency}{order.amount}</p>
+            <select onChange={(e)=>statusHandler(e,order._id)} value={order.status} className='medium-14 p-1 ring-1 ring-slate-900/5 rounded max-w-36 bg-primary'>
               <option value="Order Placed">Order Placed</option>
               <option value="Packing">Packing</option>
               <option value="Shipped">Shipped</option>
